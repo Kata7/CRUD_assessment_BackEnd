@@ -1,10 +1,15 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser')
+
 const environment = process.env.port || 'development'
 const config = require('./knexfile.js')[environment]
 const knex = require('knex')(config)
+
 const port = 8000
+
+app.use(cors())
 
 app.use(bodyParser.urlencoded({ extended: false}))
 app.use(bodyParser.json())
