@@ -14,6 +14,8 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false}))
 app.use(bodyParser.json())
 
+app.disable('x-powered-by');
+
 
 app.get('/', (req, res, next) => {
   knex('students')
@@ -24,19 +26,39 @@ app.get('/', (req, res, next) => {
 })
 
 app.post('/', (req, res, next) => {
-  res.send('post')
+  knex('students')
+  .insert({name: 'yeet', gpa: 2.00})
+  .then(() => res.status(200).send('post successful'))
+  .catch(err => {
+    next(err)
+  })
 })
 
 app.patch('/', (req, res, next) => {
-  res.send('patch')
+  // res.send('patch')
+  res.send(req.body)
 })
 
-app.delete('/', (req, res, next) => {
-  res.send('delete')
+app.delete('/:id', (req, res, next) => {
+  const id = req.params.id
+  knex('students')
+  .where({ id: id })
+  .delete()
+  .then(() => res.status(200).send('student deleted'))
+  .catch(err => {
+    next(err)
+  })
 })
 
-app.use((err, req, res, next) => {
-  console.error(err.stack)
+
+// Official Error handler
+// app.use((err, req, res, next) => {
+//   console.error(err.stack)
+// })
+
+
+// G-School method
+app.use((req, res, next) => {
   res.status(500).send('Something broke!')
 })
 
