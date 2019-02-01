@@ -16,12 +16,29 @@ app.use(bodyParser.json())
 
 
 app.get('/', (req, res, next) => {
-  const obj = {
-    message: 'yeet'
-  }
-  res.status(200).send(JSON.stringify(obj))
+  knex('students')
+  .then((rows) => res.status(200).send(rows))
+  .catch(err => {
+    next(err)
+  })
 })
 
+app.post('/', (req, res, next) => {
+  res.send('post')
+})
+
+app.patch('/', (req, res, next) => {
+  res.send('patch')
+})
+
+app.delete('/', (req, res, next) => {
+  res.send('delete')
+})
+
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
 
 app.listen(port, () => {
   console.log('Servers is running on port:', port)
