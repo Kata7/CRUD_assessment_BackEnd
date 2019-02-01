@@ -9,5 +9,10 @@ exports.seed = function(knex, Promise) {
         {id: 2, name: 'Bert', gpa: 3.0},
         {id: 3, name: 'Cathy', gpa: 2.0}
       ]);
-    });
+    })
+    .then(() => {
+      return knex.raw(
+        "SELECT setval('students', (SELECT MAX(id) FROM students))"
+      )
+    })
 };
