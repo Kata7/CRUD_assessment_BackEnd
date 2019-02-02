@@ -26,8 +26,11 @@ app.get('/', (req, res, next) => {
 })
 
 app.post('/', (req, res, next) => {
+  const name = req.body.name
+  const gpa = req.body.gpa
+
   knex('students')
-  .insert({name: 'yeet', gpa: 2.00})
+  .insert({name: name, gpa: gpa})
   .then(() => res.status(200).send('post successful'))
   .catch(err => {
     next(err)
@@ -35,12 +38,22 @@ app.post('/', (req, res, next) => {
 })
 
 app.patch('/', (req, res, next) => {
-  // res.send('patch')
-  res.send(req.body)
+  const id = req.body.id
+  const name = req.body.name
+  const gpa = req.body.gpa
+
+  knex('students')
+  .where({ id: id})
+  .update({ name: name, gpa: gpa })
+  .then(() => res.status(200).send('update successful'))
+  .catch(err => {
+    next(err)
+  })
 })
 
-app.delete('/:id', (req, res, next) => {
-  const id = req.params.id
+app.delete('/', (req, res, next) => {
+  const id = req.body.id
+
   knex('students')
   .where({ id: id })
   .delete()
